@@ -5,6 +5,7 @@ import {
   Route,
   Link,
   useRouteMatch,
+  useHistory,
 } from "react-router-dom"
 
 const Menu = () => {
@@ -41,6 +42,13 @@ const Anecdote = ({ anecdote }) => {
       <p>has {anecdote.votes || 0} votes</p>
       <p>for more info see <a href={anecdote.info}>{anecdote.info}</a></p>
     </div>
+  )
+}
+
+const Notification = ({ notification }) => {
+  if (notification === null) return null
+  return (
+    <div>{notification}</div>
   )
 }
 
@@ -124,10 +132,16 @@ const App = () => {
   ])
 
   const [notification, setNotification] = useState('')
+  const history = useHistory()
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    history.push('/')
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    setTimeout(() => {
+      setNotification(null)
+    }, 10 * 1000)
   }
 
   const anecdoteById = (id) =>
@@ -153,6 +167,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification} />
       <Switch>
         <Route path="/anecdotes/:id">
           <Anecdote anecdote={anecdote} />
