@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { addLike, removeBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-const Blog = ({ blog, updateBlog, removeBlog, user }) => {
+
+const Blog = ({ blog, user }) => {
+  const dispatch = useDispatch()
   const [visible, setVisible] = useState(false)
   const toggleButtonText = visible ? 'hide' : 'view'
 
@@ -13,33 +18,16 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
   }
 
   const handleLike = () => {
-    const updatedBlog = Object.assign({}, blog, {
-      likes: blog.likes + 1,
-    })
-    updateBlog(updatedBlog)
+    dispatch(addLike(blog))
+    dispatch(setNotification(`Existing blog ${blog.title} by ${blog.author} updated`))
   }
 
   const handleRemove = () => {
     if (window.confirm(`Remove blog ${blog.title} bt ${blog.user.name}?`)) {
-      removeBlog(blog)
+      dispatch(removeBlog(blog))
+      dispatch(setNotification(`Blog ${blog.title} by ${blog.author} deleted`))
     }
   }
-
-  /*
-  const updateBlog = async (updatedBlog) => {
-    const returnedBlog = await blogService.update(updatedBlog)
-    setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
-    dispatch(setNotification(`Existing blog ${returnedBlog.title} by ${returnedBlog.author} updated`))
-  }
-  */
-
-  /*
-  const removeBlog = async (blogToRemove) => {
-    await blogService.remove(blogToRemove)
-    setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
-    dispatch(setNotification(`Blog ${blogToRemove.title} by ${blogToRemove.author} deleted`))
-  }
-  */
 
   return (
     <div style={blogStyle} className="blog">
@@ -49,9 +37,9 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
         {visible &&
           <div className="blog-details">
             {blog.url}<br />
-            <span className="blog-details-likes-count">{blog.likes}</span> <button disabled onClick={handleLike}>Like</button><br />
+            <span className="blog-details-likes-count">{blog.likes}</span> <button onClick={handleLike}>Like</button><br />
             {blog.user.name}<br />
-            {(user && user.username === blog.user.username) && <button disabled onClick={handleRemove}>remove</button>}
+            {(user && user.username === blog.user.username) && <button onClick={handleRemove}>remove</button>}
           </div>
         }
       </div>
