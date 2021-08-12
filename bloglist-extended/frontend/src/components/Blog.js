@@ -5,7 +5,7 @@ import { setNotification } from '../reducers/notificationReducer'
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
-  const user = useSelector(state => state.login.user)
+  const loggedinUser = useSelector(state => state.login.user)
   const [visible, setVisible] = useState(false)
   const toggleButtonText = visible ? 'hide' : 'view'
 
@@ -39,7 +39,7 @@ const Blog = ({ blog }) => {
             {blog.url}<br />
             <span className="blog-details-likes-count">{blog.likes}</span> <button onClick={handleLike}>Like</button><br />
             {blog.user.name}<br />
-            {(user && user.username === blog.user.username) && <button onClick={handleRemove}>remove</button>}
+            {(loggedinUser && loggedinUser.username === blog.user.username) && <button onClick={handleRemove}>remove</button>}
           </div>
         }
       </div>
