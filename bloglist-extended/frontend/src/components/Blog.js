@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { addLike, removeBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog }) => {
   const dispatch = useDispatch()
+  const user = useSelector(state => state.login.user)
   const [visible, setVisible] = useState(false)
   const toggleButtonText = visible ? 'hide' : 'view'
 
