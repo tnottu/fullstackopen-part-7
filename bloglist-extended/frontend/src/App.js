@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
+import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -21,6 +22,7 @@ const App = () => {
   const dispatch = useDispatch()
   const loggedinUser = useSelector(state => state.login.user)
   const users = useSelector(state => state.users)
+  const blogs = useSelector(state => state.blogs)
   const blogFormRef = useRef()
 
   useEffect(() => {
@@ -32,6 +34,11 @@ const App = () => {
   const selectedUserMatch = useRouteMatch('/users/:id')
   const selectedUser = selectedUserMatch
     ? users.find(user => user.id === selectedUserMatch.params.id)
+    : null
+
+  const selectedBlogMatch = useRouteMatch('/blogs/:id')
+  const selectedBlog = selectedBlogMatch
+    ? blogs.find(blog => blog.id === selectedBlogMatch.params.id)
     : null
 
   return (
@@ -53,6 +60,9 @@ const App = () => {
             </Route>
             <Route path="/users">
               <UserList />
+            </Route>
+            <Route path="/blogs/:id">
+              <Blog blog={selectedBlog} />
             </Route>
             <Route path="/">
               <Togglable buttonLabel="create new blog" ref={blogFormRef}>

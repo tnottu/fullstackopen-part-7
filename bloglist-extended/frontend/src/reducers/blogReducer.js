@@ -20,7 +20,7 @@ const reducer = (state = [], action) => {
 
 const getExceptionMessage = (exception) => {
   let message = exception.message
-  const { data } = exception.response
+  const { data } = exception.response || {}
   if (data && data.error) {
     message += ` - ${data.error}`
   }
