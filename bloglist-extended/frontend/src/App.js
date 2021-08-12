@@ -15,6 +15,7 @@ import { initializeUsers } from './reducers/userReducer'
 import {
   Switch,
   Route,
+  Link,
   useRouteMatch,
 } from 'react-router-dom'
 
@@ -51,8 +52,12 @@ const App = () => {
 
       {loggedinUser &&
         <div>
-          <h2>blogs</h2>
-          <p>{loggedinUser.name} logged in <button type="button" onClick={() => dispatch(logout())}>Logout</button></p>
+          <div className="navigation">
+            <Link to="/">blogs</Link>
+            <Link to="/users">users</Link>
+            <span>{loggedinUser.name} logged in <button type="button" onClick={() => dispatch(logout())}>Logout</button></span>
+          </div>
+          <h2>Blog app</h2>
 
           <Switch>
             <Route path="/users/:id">
