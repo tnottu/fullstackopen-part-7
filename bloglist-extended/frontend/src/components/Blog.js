@@ -25,6 +25,22 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
     }
   }
 
+  /*
+  const updateBlog = async (updatedBlog) => {
+    const returnedBlog = await blogService.update(updatedBlog)
+    setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
+    dispatch(setNotification(`Existing blog ${returnedBlog.title} by ${returnedBlog.author} updated`))
+  }
+  */
+
+  /*
+  const removeBlog = async (blogToRemove) => {
+    await blogService.remove(blogToRemove)
+    setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+    dispatch(setNotification(`Blog ${blogToRemove.title} by ${blogToRemove.author} deleted`))
+  }
+  */
+
   return (
     <div style={blogStyle} className="blog">
       <div>
@@ -33,9 +49,9 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
         {visible &&
           <div className="blog-details">
             {blog.url}<br />
-            <span className="blog-details-likes-count">{blog.likes}</span> <button onClick={handleLike}>Like</button><br />
+            <span className="blog-details-likes-count">{blog.likes}</span> <button disabled onClick={handleLike}>Like</button><br />
             {blog.user.name}<br />
-            {(user && user.username === blog.user.username) && <button onClick={handleRemove}>remove</button>}
+            {(user && user.username === blog.user.username) && <button disabled onClick={handleRemove}>remove</button>}
           </div>
         }
       </div>
