@@ -38,9 +38,9 @@ describe('Blog app', function() {
       cy.get('input[name="password"]').type('wrong')
       cy.get('#login-button').click()
 
-      cy.get('.error')
+      cy.get('.alert')
         .should('contain', 'Wrong username or password')
-        .and('have.css', 'color', 'rgb(255, 0, 0)')
+        .and('have.css', 'color', 'rgb(114, 28, 36)')
         .and('have.css', 'border-top-style', 'solid')
         .and('have.css', 'border-right-style', 'solid')
         .and('have.css', 'border-bottom-style', 'solid')
@@ -56,13 +56,13 @@ describe('Blog app', function() {
     })
 
     it('A blog can be created', function() {
-      cy.contains('create new blog').click()
+      cy.contains('Create new blog').click()
 
       cy.get('input[name="title"]').type(testBlog.title)
       cy.get('input[name="author"]').type(testBlog.author)
       cy.get('input[name="url"]').type(testBlog.url)
 
-      cy.get('.blog-form button').contains('create').click()
+      cy.get('.blog-form button').contains('Create').click()
 
       cy.contains(testBlog.title)
       cy.contains(testBlog.author)
@@ -70,18 +70,18 @@ describe('Blog app', function() {
 
     it('User can like a blog', function() {
       cy.createBlog(testBlog)
-      cy.contains(testBlog.title).parent().as('theBlog')
-      cy.get('@theBlog').contains('view').click()
-      cy.get('@theBlog').find('.blog-details-likes-count').contains('0')
-      cy.get('@theBlog').contains('Like').click()
-      cy.get('@theBlog').find('.blog-details-likes-count').contains('1')
+      cy.contains(testBlog.title).as('theBlog')
+      cy.get('@theBlog').click()
+      cy.get('.blog-likes-count').contains('0')
+      cy.get('.blog-like').click()
+      cy.get('.blog-likes-count').contains('1')
     })
 
     it('User can delete own blog', function() {
       cy.createBlog(testBlog)
-      cy.contains(testBlog.title).parent().as('theBlog')
-      cy.get('@theBlog').contains('view').click()
-      cy.get('@theBlog').contains('remove').click()
+      cy.contains(testBlog.title).as('theBlog')
+      cy.get('@theBlog').click()
+      cy.get('.blog-remove').click()
       cy.wait(500)
       cy.get('.blog').should('not.exist')
     })
@@ -99,9 +99,9 @@ describe('Blog app', function() {
       cy.request('POST', 'http://localhost:3003/api/users/', user2)
       cy.login(user2)
 
-      cy.contains(testBlog.title).parent().as('theBlog')
-      cy.get('@theBlog').contains('view').click()
-      cy.contains('remove').should('not.exist')
+      cy.contains(testBlog.title).as('theBlog')
+      cy.get('@theBlog').click()
+      cy.get('.blog-remove').should('not.exist')
     })
 
     it('Blogs are ordered according to likes, most likes first', function() {
@@ -128,28 +128,29 @@ describe('Blog app', function() {
       cy.createBlog(testBlog2)
       cy.createBlog(testBlog3)
 
+      cy.contains(testBlog1.title).as('theBlog1')
+      cy.contains(testBlog2.title).as('theBlog2')
+      cy.contains(testBlog3.title).as('theBlog3')
 
-      cy.contains(testBlog1.title).parent().as('theBlog1')
-      cy.contains(testBlog2.title).parent().as('theBlog2')
-      cy.contains(testBlog3.title).parent().as('theBlog3')
-
-      cy.get('@theBlog1').contains('view').click()
-      cy.get('@theBlog1').contains('Like')
-        .click()
-        .wait(100)
-        .click()
-        .wait(100)
-
-      cy.get('@theBlog2').contains('view').click()
-      cy.get('@theBlog2').contains('Like')
-        .click()
-        .wait(100)
+      cy.get('@theBlog1').click()
+      cy.get('.blog-like')
         .click()
         .wait(100)
         .click()
         .wait(100)
 
-      cy.get('@theBlog3').contains('view').click()
+      cy.visit('http://localhost:3000')
+
+      cy.get('@theBlog2').click()
+      cy.get('.blog-like')
+        .click()
+        .wait(100)
+        .click()
+        .wait(100)
+        .click()
+        .wait(100)
+
+      cy.visit('http://localhost:3000')
 
       cy.get('.blog-title').then(function($els) {
         return Cypress.$.makeArray($els).map((el) => el.innerText)

@@ -17,10 +17,10 @@ const BlogList = ({ userFilter }) => {
     blogsToShow.length
       ? <ListGroup className="my-4">
         {blogsToShow.map(blog =>
-          <LinkContainer key={blog.id} to={`/blogs/${blog.id}`}>
+          <LinkContainer key={blog.id} to={`/blogs/${blog.id}`} className="blog">
             <ListGroup.Item as="a">
               <>
-                <strong>{blog.title}</strong>
+                <strong className="blog-title">{blog.title}</strong>
                 <small className="text-muted d-inline-block ml-2">by <strong>{blog.author}</strong></small>
               </>
             </ListGroup.Item>

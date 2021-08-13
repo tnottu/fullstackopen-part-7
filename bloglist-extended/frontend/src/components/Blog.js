@@ -55,7 +55,7 @@ const Blog = ({ blog }) => {
             </tr>
             <tr>
               <td>Likes:</td>
-              <td>{blog.likes}</td>
+              <td><span className="blog-likes-count">{blog.likes}</span></td>
             </tr>
             <tr>
               <td>Added by:</td>
@@ -65,9 +65,9 @@ const Blog = ({ blog }) => {
         </Table>
 
         <p>
-          <Button variant="success" onClick={handleLike}>Like</Button>
+          <Button variant="success" className="blog-like" onClick={handleLike}>Like</Button>
           {(loggedinUser && loggedinUser.username === blog.user.username) &&
-            <Button variant="danger" className="ml-2" onClick={handleRemove}>Remove</Button>
+            <Button variant="danger" className="ml-2 blog-remove" onClick={handleRemove}>Remove</Button>
           }
         </p>
 
