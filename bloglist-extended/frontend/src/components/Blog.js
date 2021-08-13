@@ -1,7 +1,8 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { addLike, removeBlog } from '../reducers/blogReducer'
+import { addLike, removeBlog, addComment } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { useField } from '../hooks'
 
 import {
   useHistory,
@@ -18,6 +19,7 @@ const Blog = ({ blog }) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const loggedinUser = useSelector(state => state.login.user)
+  const comment = useField('text')
 
   const handleLike = () => {
     dispatch(addLike(blog))
@@ -32,19 +34,35 @@ const Blog = ({ blog }) => {
     }
   }
 
+  const handleComment = (event) => {
+    event.preventDefault()
+    dispatch(addComment(blog, comment.attrs.value))
+    comment.reset()
+  }
+
   return (
     <article>
+
       <h2>{blog.title}, {blog.author}</h2>
+
       <a href={blog.url}>{blog.url}</a><br />
       <span>{blog.likes}</span> <button onClick={handleLike}>Like</button><br />
       added by {blog.user.name}<br />
       {(loggedinUser && loggedinUser.username === blog.user.username) && <button onClick={handleRemove}>remove</button>}
+
       <h3>comments</h3>
+
+      <form onSubmit={handleComment}>
+        <input { ...comment.attrs } />
+        <button>add comment</button>
+      </form>
+
       <ul>
         {blog.comments.map(({ id, text }) => (
           <li key={id}>{text}</li>
         ))}
       </ul>
+
     </article>
   )
 }

@@ -5,7 +5,8 @@ const reducer = (state = [], action) => {
   switch(action.type) {
   case 'CREATE_BLOG':
     return [...state, action.data]
-  case 'UPDATE_BLOG':
+  case 'ADD_LIKE':
+  case 'ADD_COMMENT':
     return [...state].map((item) => item.id === action.data.id
       ? action.data
       : item)
@@ -49,7 +50,21 @@ export const addLike = (blog) => {
         likes: blog.likes + 1,
       })
       dispatch({
-        type: 'UPDATE_BLOG',
+        type: 'ADD_LIKE',
+        data,
+      })
+    } catch (exception) {
+      dispatch(setNotification(getExceptionMessage(exception), 'error'))
+    }
+  }
+}
+
+export const addComment = (blog, comment) => {
+  return async (dispatch) => {
+    try {
+      const data = await blogService.createComment(blog, comment)
+      dispatch({
+        type: 'ADD_COMMENT',
         data,
       })
     } catch (exception) {
