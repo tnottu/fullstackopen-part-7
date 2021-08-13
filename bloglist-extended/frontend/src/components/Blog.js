@@ -39,6 +39,12 @@ const Blog = ({ blog }) => {
       <span>{blog.likes}</span> <button onClick={handleLike}>Like</button><br />
       added by {blog.user.name}<br />
       {(loggedinUser && loggedinUser.username === blog.user.username) && <button onClick={handleRemove}>remove</button>}
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map(({ id, text }) => (
+          <li key={id}>{text}</li>
+        ))}
+      </ul>
     </article>
   )
 }
