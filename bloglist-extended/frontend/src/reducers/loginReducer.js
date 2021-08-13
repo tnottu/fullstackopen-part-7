@@ -43,7 +43,7 @@ export const login = ({ username, password }) => {
       blogService.setToken(user.token)
     } catch (exception) {
       console.error('Wrong credentials')
-      dispatch(setNotification('Wrong username or password', 'error'))
+      dispatch(setNotification('Wrong username or password', 'danger'))
     }
   }
 }

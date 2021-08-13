@@ -1,8 +1,14 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { addLike, removeBlog, addComment } from '../reducers/blogReducer'
+import { addLike, removeBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
-import { useField } from '../hooks'
+import BlogCommentForm from './BlogCommentForm'
+import {
+  Container,
+  Button,
+  Table,
+} from 'react-bootstrap'
+
 
 import {
   useHistory,
@@ -19,51 +25,64 @@ const Blog = ({ blog }) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const loggedinUser = useSelector(state => state.login.user)
-  const comment = useField('text')
 
   const handleLike = () => {
     dispatch(addLike(blog))
-    dispatch(setNotification(`Existing blog ${blog.title} by ${blog.author} updated`))
+    dispatch(setNotification(`Existing blog ${blog.title} by ${blog.author} updated`, 'success'))
   }
 
   const handleRemove = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.user.name}?`)) {
       dispatch(removeBlog(blog))
-      dispatch(setNotification(`Blog ${blog.title} by ${blog.author} deleted`))
+      dispatch(setNotification(`Blog ${blog.title} by ${blog.author} deleted`, 'warning'))
       history.push('/')
     }
   }
 
-  const handleComment = (event) => {
-    event.preventDefault()
-    dispatch(addComment(blog, comment.attrs.value))
-    comment.reset()
-  }
-
   return (
-    <article>
+    <Container className="my-4">
+      <article>
 
-      <h2>{blog.title}, {blog.author}</h2>
+        <h1>{blog.title}</h1>
+        <p className="muted">by <strong>{blog.author}</strong></p>
 
-      <a href={blog.url}>{blog.url}</a><br />
-      <span>{blog.likes}</span> <button onClick={handleLike}>Like</button><br />
-      added by {blog.user.name}<br />
-      {(loggedinUser && loggedinUser.username === blog.user.username) && <button onClick={handleRemove}>remove</button>}
 
-      <h3>comments</h3>
+        <Table bordered>
+          <tbody>
+            <tr>
+              <td>URL:</td>
+              <td><a href={blog.url} target="blank">{blog.url}</a></td>
+            </tr>
+            <tr>
+              <td>Likes:</td>
+              <td>{blog.likes}</td>
+            </tr>
+            <tr>
+              <td>Added by:</td>
+              <td>{blog.user.name}</td>
+            </tr>
+          </tbody>
+        </Table>
 
-      <form onSubmit={handleComment}>
-        <input { ...comment.attrs } />
-        <button>add comment</button>
-      </form>
+        <p>
+          <Button variant="success" onClick={handleLike}>Like</Button>
+          {(loggedinUser && loggedinUser.username === blog.user.username) &&
+            <Button variant="danger" className="ml-2" onClick={handleRemove}>Remove</Button>
+          }
+        </p>
 
-      <ul>
-        {blog.comments.map(({ id, text }) => (
-          <li key={id}>{text}</li>
-        ))}
-      </ul>
+        <h3 className="my-4">Comments</h3>
 
-    </article>
+        <ul>
+          {blog.comments.map(({ id, text }) => (
+            <li key={id}>{text}</li>
+          ))}
+        </ul>
+
+        <BlogCommentForm blog={blog} />
+
+      </article>
+    </Container>
   )
 }
 

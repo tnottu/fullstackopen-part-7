@@ -1,31 +1,33 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-
+import { LinkContainer } from 'react-router-bootstrap'
 import {
-  Link,
-} from 'react-router-dom'
+  ListGroup
+} from 'react-bootstrap'
 
-const BlogList = () => {
+const BlogList = ({ userFilter }) => {
   const blogs = useSelector(state => state.blogs)
   const blogsSorted = [...blogs].sort((a, b) => (a.likes > b.likes) ? -1 : 1)
-  const blogsToShow = blogsSorted
-
-  const blogItemStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
+  const blogsByUser = [...blogs].filter((blog) => userFilter && blog.user.id === userFilter.id)
+  const blogsToShow = userFilter
+    ? blogsByUser
+    : blogsSorted
 
   return (
-    <div>
-      {blogsToShow.map(blog =>
-        <div key={blog.id} style={blogItemStyle} className="blog">
-          <Link to={`/blogs/${blog.id}`}>{blog.title}, {blog.author}</Link>
-        </div>
-      )}
-    </div>
+    blogsToShow.length
+      ? <ListGroup className="my-4">
+        {blogsToShow.map(blog =>
+          <LinkContainer key={blog.id} to={`/blogs/${blog.id}`}>
+            <ListGroup.Item as="a">
+              <>
+                <strong>{blog.title}</strong>
+                <small className="text-muted d-inline-block ml-2">by <strong>{blog.author}</strong></small>
+              </>
+            </ListGroup.Item>
+          </LinkContainer>
+        )}
+      </ListGroup>
+      : <p>No blogs to show</p>
   )
 }
 

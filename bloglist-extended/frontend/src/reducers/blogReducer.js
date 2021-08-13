@@ -37,7 +37,7 @@ export const createBlog = (blog) => {
         data,
       })
     } catch (exception) {
-      dispatch(setNotification(getExceptionMessage(exception), 'error'))
+      dispatch(setNotification(getExceptionMessage(exception), 'danger'))
     }
   }
 }
@@ -54,7 +54,7 @@ export const addLike = (blog) => {
         data,
       })
     } catch (exception) {
-      dispatch(setNotification(getExceptionMessage(exception), 'error'))
+      dispatch(setNotification(getExceptionMessage(exception), 'danger'))
     }
   }
 }
@@ -68,7 +68,7 @@ export const addComment = (blog, comment) => {
         data,
       })
     } catch (exception) {
-      dispatch(setNotification(getExceptionMessage(exception), 'error'))
+      dispatch(setNotification(getExceptionMessage(exception), 'danger'))
     }
   }
 }
@@ -82,7 +82,7 @@ export const removeBlog = (blog) => {
         data: blog,
       })
     } catch (exception) {
-      dispatch(setNotification(getExceptionMessage(exception), 'error'))
+      dispatch(setNotification(getExceptionMessage(exception), 'danger'))
     }
   }
 }

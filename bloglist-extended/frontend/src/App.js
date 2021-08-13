@@ -11,11 +11,18 @@ import User from './components/User'
 import { initializeBlogs } from './reducers/blogReducer'
 import { logout, initializeLogin } from './reducers/loginReducer'
 import { initializeUsers } from './reducers/userReducer'
+import { LinkContainer } from 'react-router-bootstrap'
+import {
+  Container,
+  Navbar,
+  Nav,
+  Button
+} from 'react-bootstrap'
+
 
 import {
   Switch,
   Route,
-  Link,
   useRouteMatch,
 } from 'react-router-dom'
 
@@ -44,39 +51,61 @@ const App = () => {
 
   return (
     <>
-      <Notification />
-
       {!loggedinUser &&
-        <LoginForm />
+        <Container>
+          <Notification />
+          <LoginForm />
+        </Container>
       }
 
       {loggedinUser &&
-        <div>
-          <div className="navigation">
-            <Link to="/">blogs</Link>
-            <Link to="/users">users</Link>
-            <span>{loggedinUser.name} logged in <button type="button" onClick={() => dispatch(logout())}>Logout</button></span>
-          </div>
-          <h2>Blog app</h2>
+        <>
+          <Navbar bg="light" expand="lg">
+            <Container>
+              <LinkContainer to="/">
+                <Navbar.Brand>Blog app</Navbar.Brand>
+              </LinkContainer>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto">
+                  <LinkContainer to="/">
+                    <Nav.Link>Blogs</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="/users">
+                    <Nav.Link>Users</Nav.Link>
+                  </LinkContainer>
+                </Nav>
+              </Navbar.Collapse>
+              <Navbar.Text>
+                <span style={{ display: 'inline-block', marginRight: '1rem' }}>{loggedinUser.name} logged in</span>
+                <Button variant="secondary" size="sm" type="button" onClick={() => dispatch(logout())}>Logout</Button>
+              </Navbar.Text>
+            </Container>
+          </Navbar>
 
-          <Switch>
-            <Route path="/users/:id">
-              <User user={selectedUser} />
-            </Route>
-            <Route path="/users">
-              <UserList />
-            </Route>
-            <Route path="/blogs/:id">
-              <Blog blog={selectedBlog} />
-            </Route>
-            <Route path="/">
-              <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-                <BlogForm { ...{ blogFormRef } } />
-              </Togglable>
-              <BlogList />
-            </Route>
-          </Switch>
-        </div>
+          <Container>
+            <Notification />
+            <Switch>
+              <Route path="/users/:id">
+                <User user={selectedUser} />
+              </Route>
+              <Route path="/users">
+                <h1 className="my-4">Users</h1>
+                <UserList />
+              </Route>
+              <Route path="/blogs/:id">
+                <Blog blog={selectedBlog} />
+              </Route>
+              <Route path="/">
+                <h1 className="my-4">Blogs</h1>
+                <BlogList />
+                <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
+                  <BlogForm { ...{ blogFormRef } } />
+                </Togglable>
+              </Route>
+            </Switch>
+          </Container>
+        </>
       }
     </>
   )
