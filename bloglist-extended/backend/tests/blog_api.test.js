@@ -57,6 +57,7 @@ describe('blog api post methods', () => {
       author: 'Iain M. Banks',
       url: 'https://en.wikipedia.org/wiki/Excession',
       likes: 12,
+      comments: [],
     }
 
     await api
@@ -151,6 +152,7 @@ describe('blog api put methods', () => {
       author: 'Frank Herbert',
       url: 'https://en.wikipedia.org/wiki/Dune_(novel)',
       likes: 412,
+      comments: [],
     }
 
     await api
