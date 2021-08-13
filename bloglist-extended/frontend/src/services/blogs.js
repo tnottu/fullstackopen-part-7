@@ -2,9 +2,11 @@ import axios from 'axios'
 const baseUrl = '/api/blogs'
 
 let token = null
+let config = {}
 
 const setToken = newToken => {
   token = `bearer ${newToken}`
+  config.headers = { Authorization: token }
 }
 
 const getAll = async () => {
@@ -12,42 +14,25 @@ const getAll = async () => {
   return response.data
 }
 
-const create = async newObject => {
-  const config = {
-    headers: { Authorization: token },
-  }
-
-  const response = await axios.post(baseUrl, newObject, config)
+const create = async (blog) => {
+  const response = await axios.post(baseUrl, blog, config)
   return response.data
 }
 
-const update = async newObject => {
-  const config = {
-    headers: { Authorization: token },
+const update = async (blog) => {
+  if (typeof blog.user === 'object') {
+    blog.user = blog.user.id
   }
-
-  if (typeof newObject.user === 'object') {
-    newObject.user = newObject.user.id
-  }
-
-  const response = await axios.put(`${baseUrl}/${newObject.id}`, newObject, config)
+  const response = await axios.put(`${baseUrl}/${blog.id}`, blog, config)
   return response.data
 }
 
-const remove = async newObject => {
-  const config = {
-    headers: { Authorization: token },
-  }
-
-  const response = await axios.delete(`${baseUrl}/${newObject.id}`, config)
+const remove = async (blog) => {
+  const response = await axios.delete(`${baseUrl}/${blog.id}`, config)
   return response.data
 }
 
 const createComment = async (blog, comment) => {
-  const config = {
-    headers: { Authorization: token },
-  }
-
   const response = await axios.post(`${baseUrl}/${blog.id}/comments`, { text: comment }, config)
   return response.data
 }
